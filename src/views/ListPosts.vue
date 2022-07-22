@@ -1,4 +1,19 @@
 <template>
+  <div class="container mt-3">
+    <div class="row">
+      <div class="col">
+        <p class="h3 text-success fw-bold">Liste de Posts</p>
+        <p class="mt-3">
+          <router-link to="/post/add" class="btn btn-success"
+            ><i class="fa fa-plus-circle"></i> Ajouter un post</router-link
+          >
+        </p>
+        <p class="fst-italic mt-3">
+          Test pour "Candidature poste Developpeur Web en alternance - Newdeal"
+        </p>
+      </div>
+    </div>
+  </div>
   <div v-if="isLoading">
     <div class="container">
       <div class="row">
@@ -9,7 +24,7 @@
     </div>
   </div>
   <!--If error occure-->
-  <div v-if="!loading && errorMessage">
+  <div v-if="!isLoading && errorMessage">
     <div class="container mt-3">
       <div class="row">
         <div class="col">
@@ -27,8 +42,8 @@
               <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Title</th>
+                    <th scope="col">#</th>
+                    <th scope="col">Titre</th>
                     <th scope="col"></th>
                     <th scope="col"></th>
                     <th scope="col"></th>
@@ -55,7 +70,7 @@
                     <td>
                       <button
                         class="btn btn-danger my-1"
-                        @click="submitDeleteContact(post.id)"
+                        @click="deletePost(post.id)"
                       >
                         <i class="fa fa-trash"></i>
                       </button>
@@ -94,6 +109,23 @@ export default {
       this.errorMessage = error;
       this.isLoading = false;
     }
+  },
+  methods: {
+    deletePost: async function (postId) {
+      try {
+        this.isLoading = true;
+        let response = await PostServices.deletePost(postId);
+        if (response) {
+          this.isLoading = true;
+          let response = await PostServices.getAllPosts();
+          this.posts = response.data;
+          this.isLoading = false;
+        }
+      } catch (error) {
+        this.errorMessage = error;
+        this.isLoading = false;
+      }
+    },
   },
   components: { Spinner },
 };
