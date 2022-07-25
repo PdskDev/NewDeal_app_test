@@ -2,7 +2,7 @@
   <div class="container mt-3">
     <div class="row">
       <div class="col">
-        <p class="h3 text-success fw-bold">Modifier le post #{{ post.id }}</p>
+        <p class="h3 text-success fw-bold">Ajouter un post</p>
         <p class="fst-italic">
           Test pour "Candidature poste Developpeur Web en alternance - Newdeal"
         </p>
@@ -31,7 +31,7 @@
   <div class="container mt-3">
     <div class="row">
       <div class="col-md-6">
-        <form @submit.prevent="handleUpdatePost()">
+        <form @submit.prevent="handleAddPost()">
           <div class="mb-2">
             <input
               required
@@ -67,7 +67,7 @@
               ><i class="fa fa-arrow-alt-circle-left"></i> Retour à la
               liste</router-link
             >{{ ' ' }}
-            <input type="submit" class="btn btn-success" value="Modifier" />
+            <input type="submit" class="btn btn-success" value="Sauvegarder" />
           </div>
         </form>
       </div>
@@ -79,25 +79,24 @@ import { PostServices } from '@/service/JsonServerService';
 import Spinner from '@/components/Spinner.vue';
 
 export default {
-  name: 'EditPost',
+  name: 'AddPost',
   data() {
     return {
-      postId: this.$route.params.postId,
-      isLoading: false,
-      post: {},
+      post: {
+        title: '',
+        body: '',
+        userId: '',
+      },
       users: [],
+      isLoading: false,
       errorMessage: null,
     };
   },
   created: async function () {
     try {
       this.isLoading = true;
-      let responsePost = await PostServices.getOnePost(this.postId);
       let ResponseUsers = await PostServices.getAllUsers();
-
-      this.post = responsePost.data;
       this.users = ResponseUsers.data;
-
       this.isLoading = false;
     } catch (error) {
       this.errorMessage = error;
@@ -105,18 +104,13 @@ export default {
     }
   },
   methods: {
-    isDone: function () {
-      return (
-        Object.keys(this.post).length > 0 && Object.keys(this.users).length > 0
-      );
-    },
-    handleUpdatePost: async function () {
+    handleAddPost: async function () {
       try {
-        let response = await PostServices.updatePost(this.post, this.postId);
+        let response = await PostServices.newPost(this.post);
         if (response) {
           return this.$router.push('/') && console.log(response);
         } else {
-          return this.$router.push(`/posts/edit/${this.postId}`);
+          return this.$router.push('/posts/add');
         }
       } catch (error) {
         this.errorMessage = error;

@@ -32,4 +32,23 @@ export class PostServices {
     let dataURL = `${this.serverURL}/posts/${postId}`;
     return axios.delete(dataURL);
   }
+
+  //Get all users
+  static getAllUsers() {
+    let dataURL = `${this.serverURL}/users/`;
+    return axios.get(dataURL);
+  }
+
+  //Get one user
+  static getOneUser(post) {
+    let userId = post.userId;
+    let dataURL = `${this.serverURL}/users/${userId}`;
+    return axios.get(dataURL);
+  }
+
+  //Get all users
+  static getPostComment(postId) {
+    let dataURL = `${this.serverURL}/posts/${postId}/comments`;
+    return axios.get(dataURL);
+  }
 }

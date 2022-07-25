@@ -2,9 +2,9 @@
   <div class="container mt-3">
     <div class="row">
       <div class="col">
-        <p class="h3 text-success fw-bold">Liste de Posts</p>
+        <p class="h3 text-success fw-bold">Afficher tous les Posts</p>
         <p class="mt-3">
-          <router-link to="/post/add" class="btn btn-success"
+          <router-link to="/posts/add" class="btn btn-success"
             ><i class="fa fa-plus-circle"></i> Ajouter un post</router-link
           >
         </p>
@@ -115,6 +115,7 @@ export default {
       try {
         this.isLoading = true;
         let response = await PostServices.deletePost(postId);
+        console.log(response);
         if (response) {
           this.isLoading = true;
           let response = await PostServices.getAllPosts();
